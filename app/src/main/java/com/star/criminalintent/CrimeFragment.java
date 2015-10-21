@@ -3,6 +3,7 @@ package com.star.criminalintent;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -25,6 +26,8 @@ public class CrimeFragment extends Fragment {
     private static final String ARG_CRIME_ID = "crime_id";
     private static final String DIALOG_DATE = "DialogDate";
     private static final String DIALOG_TIME = "DialogTime";
+
+    public static final String EXTRA_DATE = "date";
 
     private static final int REQUEST_CODE = 0;
 
@@ -84,11 +87,22 @@ public class CrimeFragment extends Fragment {
         mDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                DatePickerFragment datePickerFragment =
-                        DatePickerFragment.newInstance(mCrime.getDate());
-                datePickerFragment.setTargetFragment(CrimeFragment.this, REQUEST_CODE);
-                datePickerFragment.show(fragmentManager, DIALOG_DATE);
+
+                if (getResources().getConfiguration().orientation
+                        == Configuration.ORIENTATION_LANDSCAPE) {
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    DatePickerFragment datePickerFragment =
+                            DatePickerFragment.newInstance(mCrime.getDate());
+                    datePickerFragment.setTargetFragment(CrimeFragment.this, REQUEST_CODE);
+                    datePickerFragment.show(fragmentManager, DIALOG_DATE);
+                } else if (getResources().getConfiguration().orientation
+                        == Configuration.ORIENTATION_PORTRAIT) {
+                    Intent intent = new Intent(CrimeFragment.this.getActivity(),
+                            DatePickerActivity.class);
+                    intent.putExtra(EXTRA_DATE, mCrime.getDate());
+                    startActivityForResult(intent, REQUEST_CODE);
+                }
+
             }
         });
 
@@ -97,11 +111,20 @@ public class CrimeFragment extends Fragment {
         mTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                TimePickerFragment timePickerFragment =
-                        TimePickerFragment.newInstance(mCrime.getDate());
-                timePickerFragment.setTargetFragment(CrimeFragment.this, REQUEST_CODE);
-                timePickerFragment.show(fragmentManager, DIALOG_DATE);
+                if (getResources().getConfiguration().orientation
+                        == Configuration.ORIENTATION_LANDSCAPE) {
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    TimePickerFragment timePickerFragment =
+                            TimePickerFragment.newInstance(mCrime.getDate());
+                    timePickerFragment.setTargetFragment(CrimeFragment.this, REQUEST_CODE);
+                    timePickerFragment.show(fragmentManager, DIALOG_TIME);
+                } else if (getResources().getConfiguration().orientation
+                        == Configuration.ORIENTATION_PORTRAIT) {
+                    Intent intent = new Intent(CrimeFragment.this.getActivity(),
+                            TimePickerActivity.class);
+                    intent.putExtra(EXTRA_DATE, mCrime.getDate());
+                    startActivityForResult(intent, REQUEST_CODE);
+                }
             }
         });
 

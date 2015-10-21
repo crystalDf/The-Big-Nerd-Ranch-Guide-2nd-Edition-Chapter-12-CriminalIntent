@@ -12,4 +12,5 @@
     <string name="crime_solved_label">Solved</string>
     <string name="date_picker_title">Date of crime:</string>
     <string name="time_picker_title">Time of crime:</string>
+    <string name="ok">OK</string>
 </resources>
