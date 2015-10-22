@@ -90,7 +90,7 @@ public class CrimeFragment extends Fragment {
 
                 if (getResources().getConfiguration().orientation
                         == Configuration.ORIENTATION_LANDSCAPE) {
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    FragmentManager fragmentManager = getFragmentManager();
                     DatePickerFragment datePickerFragment =
                             DatePickerFragment.newInstance(mCrime.getDate());
                     datePickerFragment.setTargetFragment(CrimeFragment.this, REQUEST_CODE);
@@ -113,7 +113,7 @@ public class CrimeFragment extends Fragment {
             public void onClick(View v) {
                 if (getResources().getConfiguration().orientation
                         == Configuration.ORIENTATION_LANDSCAPE) {
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    FragmentManager fragmentManager = getFragmentManager();
                     TimePickerFragment timePickerFragment =
                             TimePickerFragment.newInstance(mCrime.getDate());
                     timePickerFragment.setTargetFragment(CrimeFragment.this, REQUEST_CODE);
