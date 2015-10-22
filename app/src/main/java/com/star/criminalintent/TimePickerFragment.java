@@ -47,36 +47,20 @@ public class TimePickerFragment extends DialogFragment {
 
         if (getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_PORTRAIT){
+
+            final Calendar calendar = getCalendar();
+
             View view = inflater.inflate(R.layout.fragment_time_picker,
                     container, false);
+            int timePickerId = R.id.time_picker;
 
-            Date date = (Date) getArguments().getSerializable(ARG_DATE);
-
-            final Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-
-            int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
-            int minute = calendar.get(Calendar.MINUTE);
-
-            mTimePicker = (TimePicker) view.findViewById(R.id.time_picker);
-            mTimePicker.setIs24HourView(true);
-            mTimePicker.setCurrentHour(hourOfDay);
-            mTimePicker.setCurrentMinute(minute);
+            setDateToTimePicker(calendar, view, timePickerId);
 
             mTimePickerButton = (Button) view.findViewById(R.id.time_picker_button);
             mTimePickerButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int year = calendar.get(Calendar.YEAR);
-                    int month = calendar.get(Calendar.MONTH);
-                    int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-
-                    int hourOfDay = mTimePicker.getCurrentHour();
-                    int minute = mTimePicker.getCurrentMinute();
-
-                    Date date = new GregorianCalendar(
-                            year, month, dayOfMonth, hourOfDay, minute).getTime();
-
+                    Date date = getDateFromTimePicker(calendar);
                     sendResult(Activity.RESULT_OK, date);
                 }
             });
@@ -92,20 +76,12 @@ public class TimePickerFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        Date date = (Date) getArguments().getSerializable(ARG_DATE);
-
-        final Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-
-        int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
+        final Calendar calendar = getCalendar();
 
         View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_time, null);
+        int timePickerId = R.id.dialog_time_time_picker;
 
-        mTimePicker = (TimePicker) view.findViewById(R.id.dialog_time_time_picker);
-        mTimePicker.setIs24HourView(true);
-        mTimePicker.setCurrentHour(hourOfDay);
-        mTimePicker.setCurrentMinute(minute);
+        setDateToTimePicker(calendar, view, timePickerId);
 
         return new AlertDialog.Builder(getContext())
                 .setView(view)
@@ -113,24 +89,46 @@ public class TimePickerFragment extends DialogFragment {
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        int year = calendar.get(Calendar.YEAR);
-                        int month = calendar.get(Calendar.MONTH);
-                        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-
-                        int hourOfDay = mTimePicker.getCurrentHour();
-                        int minute = mTimePicker.getCurrentMinute();
-
-                        Date date = new GregorianCalendar(
-                                year, month, dayOfMonth, hourOfDay, minute).getTime();
-
+                        Date date = getDateFromTimePicker(calendar);
                         sendResult(Activity.RESULT_OK, date);
                     }
                 })
                 .create();
     }
 
-    private void sendResult(int resultCode, Date date) {
+    @NonNull
+    private Calendar getCalendar() {
+        Date date = (Date) getArguments().getSerializable(ARG_DATE);
 
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar;
+    }
+
+    private void setDateToTimePicker(Calendar calendar, View view, int timePickerId) {
+        int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        mTimePicker = (TimePicker) view.findViewById(timePickerId);
+        mTimePicker.setIs24HourView(true);
+        mTimePicker.setCurrentHour(hourOfDay);
+        mTimePicker.setCurrentMinute(minute);
+    }
+
+    @NonNull
+    private Date getDateFromTimePicker(Calendar calendar) {
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+        int hourOfDay = mTimePicker.getCurrentHour();
+        int minute = mTimePicker.getCurrentMinute();
+
+        return new GregorianCalendar(
+                year, month, dayOfMonth, hourOfDay, minute).getTime();
+    }
+
+    private void sendResult(int resultCode, Date date) {
         Intent intent = new Intent();
         intent.putExtra(EXTRA_DATE, date);
 

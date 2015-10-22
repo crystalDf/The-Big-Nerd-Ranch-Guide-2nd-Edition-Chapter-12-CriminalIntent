@@ -47,35 +47,20 @@ public class DatePickerFragment extends DialogFragment {
 
         if (getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_PORTRAIT){
+
+            final Calendar calendar = getCalendar();
+
             View view = inflater.inflate(R.layout.fragment_date_picker,
                     container, false);
+            int datePickerId = R.id.date_picker;
 
-            Date date = (Date) getArguments().getSerializable(ARG_DATE);
-
-            final Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
-            int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-
-            mDatePicker = (DatePicker) view.findViewById(R.id.date_picker);
-            mDatePicker.init(year, month, dayOfMonth, null);
+            setDateToDatePicker(calendar, view, datePickerId);
 
             mDatePickerButton = (Button) view.findViewById(R.id.date_picker_button);
             mDatePickerButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int year = mDatePicker.getYear();
-                    int month = mDatePicker.getMonth();
-                    int dayOfMonth = mDatePicker.getDayOfMonth();
-
-                    int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
-                    int minute = calendar.get(Calendar.MINUTE);
-
-                    Date date = new GregorianCalendar(
-                            year, month, dayOfMonth, hourOfDay, minute).getTime();
-
+                    Date date = getDateFromDatePicker(calendar);
                     sendResult(Activity.RESULT_OK, date);
                 }
             });
@@ -91,19 +76,12 @@ public class DatePickerFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        Date date = (Date) getArguments().getSerializable(ARG_DATE);
-
-        final Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        final Calendar calendar = getCalendar();
 
         View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_date, null);
+        int datePickerId = R.id.dialog_date_date_picker;
 
-        mDatePicker = (DatePicker) view.findViewById(R.id.dialog_date_date_picker);
-        mDatePicker.init(year, month, dayOfMonth, null);
+        setDateToDatePicker(calendar, view, datePickerId);
 
         return new AlertDialog.Builder(getContext())
                 .setView(view)
@@ -111,20 +89,42 @@ public class DatePickerFragment extends DialogFragment {
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        int year = mDatePicker.getYear();
-                        int month = mDatePicker.getMonth();
-                        int dayOfMonth = mDatePicker.getDayOfMonth();
-
-                        int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
-                        int minute = calendar.get(Calendar.MINUTE);
-
-                        Date date = new GregorianCalendar(
-                                year, month, dayOfMonth, hourOfDay, minute).getTime();
-
+                        Date date = getDateFromDatePicker(calendar);
                         sendResult(Activity.RESULT_OK, date);
                     }
                 })
                 .create();
+    }
+
+    @NonNull
+    private Calendar getCalendar() {
+        Date date = (Date) getArguments().getSerializable(ARG_DATE);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar;
+    }
+
+    private void setDateToDatePicker(Calendar calendar, View view, int datePickerId) {
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+        mDatePicker = (DatePicker) view.findViewById(datePickerId);
+        mDatePicker.init(year, month, dayOfMonth, null);
+    }
+
+    @NonNull
+    private Date getDateFromDatePicker(Calendar calendar) {
+        int year = mDatePicker.getYear();
+        int month = mDatePicker.getMonth();
+        int dayOfMonth = mDatePicker.getDayOfMonth();
+
+        int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        return new GregorianCalendar(
+                year, month, dayOfMonth, hourOfDay, minute).getTime();
     }
 
     private void sendResult(int resultCode, Date date) {
