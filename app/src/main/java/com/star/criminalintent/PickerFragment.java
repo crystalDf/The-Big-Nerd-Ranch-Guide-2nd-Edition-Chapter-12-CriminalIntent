@@ -74,7 +74,7 @@ public abstract class PickerFragment extends DialogFragment {
                     .create();
         }
 
-        return null;
+        return super.onCreateDialog(savedInstanceState);
     }
 
     @NonNull
