@@ -51,24 +51,30 @@ public abstract class PickerFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        final Calendar calendar = getCalendar();
+        if (getResources().getConfiguration().orientation
+                == Configuration.ORIENTATION_LANDSCAPE) {
 
-        View view = getDialogView();
-        int pickerId = getDialogPickerId();
+            final Calendar calendar = getCalendar();
 
-        setDate(calendar, view, pickerId);
+            View view = getDialogView();
+            int pickerId = getDialogPickerId();
 
-        return new AlertDialog.Builder(getContext())
-                .setView(view)
-                .setTitle(getPickerTitle())
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Date date = getDate(calendar);
-                        sendResult(Activity.RESULT_OK, date);
-                    }
-                })
-                .create();
+            setDate(calendar, view, pickerId);
+
+            return new AlertDialog.Builder(getContext())
+                    .setView(view)
+                    .setTitle(getPickerTitle())
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Date date = getDate(calendar);
+                            sendResult(Activity.RESULT_OK, date);
+                        }
+                    })
+                    .create();
+        }
+
+        return null;
     }
 
     @NonNull
