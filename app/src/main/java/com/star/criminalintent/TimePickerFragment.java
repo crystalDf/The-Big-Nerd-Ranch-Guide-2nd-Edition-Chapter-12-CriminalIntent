@@ -73,7 +73,9 @@ public class TimePickerFragment extends PickerFragment {
         int minute = calendar.get(Calendar.MINUTE);
 
         mTimePicker = (TimePicker) view.findViewById(pickerId);
-        mTimePicker.setIs24HourView(true);
+//        mTimePicker.setSaveFromParentEnabled(false);
+//        mTimePicker.setSaveEnabled(true);
+        mTimePicker.setIs24HourView(false);
         mTimePicker.setCurrentHour(hourOfDay);
         mTimePicker.setCurrentMinute(minute);
     }
