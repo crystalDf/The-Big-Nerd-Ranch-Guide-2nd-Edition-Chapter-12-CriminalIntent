@@ -3,12 +3,7 @@ package com.star.criminalintent;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -16,90 +11,23 @@ import java.util.Date;
 public abstract class PickerFragment extends DialogFragment {
 
     protected static final String ARG_DATE = "date";
+    protected Calendar mCalendar;
 
-    public static final String EXTRA_DATE = "date";
+    public static final String EXTRA_DATE = "com.star.date";
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-//        if (getResources().getConfiguration().orientation
-//                == Configuration.ORIENTATION_PORTRAIT){
-
-        final Calendar calendar = getCalendar();
-
-        View view = getView(inflater, container);
-        int pickerId = getPickerId();
-
-        setDate(calendar, view, pickerId);
-
-        setPickerButtonOnClickListener(calendar, view);
-
-        return view;
-//        }
-//
-//        return super.onCreateView(inflater, container, savedInstanceState);
-
-    }
-
-//    @NonNull
-//    @Override
-//    public Dialog onCreateDialog(Bundle savedInstanceState) {
-//
-//        if (getResources().getConfiguration().orientation
-//                == Configuration.ORIENTATION_LANDSCAPE) {
-//
-//            final Calendar calendar = getCalendar();
-//
-//            View view = getDialogView();
-//            int pickerId = getDialogPickerId();
-//
-//            setDate(calendar, view, pickerId);
-//
-//            return new AlertDialog.Builder(getContext())
-//                    .setView(view)
-//                    .setTitle(getPickerTitle())
-//                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            Date date = getDate(calendar);
-//                            sendResult(Activity.RESULT_OK, date);
-//                        }
-//                    })
-//                    .create();
-//        }
-//
-//        return super.onCreateDialog(savedInstanceState);
-//    }
-
-    @NonNull
-    protected Calendar getCalendar() {
         Date date = (Date) getArguments().getSerializable(ARG_DATE);
 
-        Calendar calendar = Calendar.getInstance();
-
-        if (date != null) {
-            calendar.setTime(date);
-        }
-
-        return calendar;
+        mCalendar = Calendar.getInstance();
+        mCalendar.setTime(date);
     }
 
-    protected abstract View getView(LayoutInflater inflater, ViewGroup container);
+    protected abstract void setDate();
 
-    protected abstract int getPickerId();
-
-    protected abstract void setPickerButtonOnClickListener(final Calendar calendar, View view);
-
-    protected abstract View getDialogView();
-
-    protected abstract int getDialogPickerId();
-
-    protected abstract int getPickerTitle();
-
-    protected abstract void setDate(Calendar calendar, View view, int pickerId);
-
-    protected abstract Date getDate(Calendar calendar);
+    protected abstract Date getDate();
 
     protected void sendResult(int resultCode, Date date) {
         Intent intent = new Intent();
