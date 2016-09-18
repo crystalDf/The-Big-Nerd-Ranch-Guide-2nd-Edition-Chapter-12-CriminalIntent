@@ -27,8 +27,6 @@ public class CrimeFragment extends Fragment {
     private static final String DIALOG_DATE = "DialogDate";
     private static final String DIALOG_TIME = "DialogTime";
 
-    public static final String EXTRA_DATE = "date";
-
     private static final int REQUEST_CODE = 0;
 
     private Crime mCrime;
