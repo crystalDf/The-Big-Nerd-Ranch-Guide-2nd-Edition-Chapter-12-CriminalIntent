@@ -25,4 +25,5 @@ public class TimePickerActivity extends SingleFragmentActivity {
 
         return TimePickerFragment.newInstance(date);
     }
+
 }

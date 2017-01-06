@@ -25,4 +25,5 @@ public class DatePickerActivity extends SingleFragmentActivity {
 
         return DatePickerFragment.newInstance(date);
     }
+
 }
